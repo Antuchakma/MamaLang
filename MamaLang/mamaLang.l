@@ -40,7 +40,7 @@
 
 [a-zA-Z_][a-zA-Z0-9_]* { fprintf(yyout, "<IDENTIFIER : %s>\n", yytext); }
 
-[ \t\n]+               { /* ignore whitespace */ }
+[ \t\n]+             
 
 .                      { fprintf(yyout, "<UNKNOWN : %s>\n", yytext); }
 
