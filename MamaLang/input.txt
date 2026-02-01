@@ -1,0 +1,18 @@
+edike ay mama
+
+mama eita hoilo a = 20
+mama eita hoilo b = 10
+
+jodi mama ( a > b ) {
+    bol mama("A boro")
+}
+nahole mama {
+    bol mama("B boro")
+}
+
+mama jotokkhon ( a > 0 ) {
+    bol mama(a)
+    a = a - 1
+}
+
+mama chole ja
