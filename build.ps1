@@ -6,43 +6,55 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-function Require-Command($name) {
-    if (-not (Get-Command $name -ErrorAction SilentlyContinue)) {
-        throw "Required command '$name' was not found in PATH."
+# MSYS2 paths — adjust if your MSYS2 is installed elsewhere
+$MSYS2 = "C:\msys64"
+$MSYS2_USR_BIN = "$MSYS2\usr\bin"
+$MSYS2_MINGW_BIN = "$MSYS2\mingw64\bin"
+
+function Find-Tool($name, [string[]]$searchPaths) {
+    # Check PATH first
+    $cmd = Get-Command $name -ErrorAction SilentlyContinue
+    if ($cmd) { return $cmd.Source }
+    # Check known MSYS2 locations
+    foreach ($dir in $searchPaths) {
+        $full = Join-Path $dir "$name.exe"
+        if (Test-Path $full) { return $full }
     }
+    throw "Could not find '$name'. Install MSYS2 from https://www.msys2.org/ and run: pacman -S base-devel mingw-w64-ucrt-x86_64-gcc flex bison make"
 }
 
-function Resolve-AnyCommand([string[]]$names) {
-    foreach ($n in $names) {
-        $cmd = Get-Command $n -ErrorAction SilentlyContinue
-        if ($cmd) { return $cmd.Name }
-    }
-    throw "None of these commands were found in PATH: $($names -join ', ')"
-}
+$GCC   = Find-Tool "gcc"       @($MSYS2_MINGW_BIN, $MSYS2_USR_BIN)
+$BISON = Find-Tool "bison"     @($MSYS2_USR_BIN, $MSYS2_MINGW_BIN)
+$FLEX  = Find-Tool "flex"      @($MSYS2_USR_BIN, $MSYS2_MINGW_BIN)
 
-Require-Command gcc
-
-$BisonCmd = Resolve-AnyCommand @("bison", "win_bison")
-$FlexCmd = Resolve-AnyCommand @("flex", "win_flex")
+Write-Host "Using GCC:   $GCC"
+Write-Host "Using Bison: $BISON"
+Write-Host "Using Flex:  $FLEX"
 
 if (-not (Test-Path "build")) {
     New-Item -ItemType Directory -Path "build" | Out-Null
 }
 
-& $BisonCmd -d -o build/parser.tab.c src/parser.y
+# Set PATH so bison can find m4
+$env:PATH = "$MSYS2_USR_BIN;$MSYS2_MINGW_BIN;$env:PATH"
+
+& $BISON -d -o build/parser.tab.c src/parser.y
 if ($LASTEXITCODE -ne 0) { throw "bison failed" }
 
-& $FlexCmd -o build/lex.yy.c src/lexer.l
+& $FLEX -o build/lex.yy.c src/lexer.l
 if ($LASTEXITCODE -ne 0) { throw "flex failed" }
 
-gcc -Wall -Wextra -O2 -Ibuild build/parser.tab.c build/lex.yy.c -o build/mamalangc.exe
+& $GCC -Wall -Wextra -O2 -Ibuild build/parser.tab.c build/lex.yy.c -o build/mamalangc.exe
 if ($LASTEXITCODE -ne 0) { throw "compiler build failed" }
+
+Write-Host "Compiler built successfully. Compiling $InputFile ..."
 
 ./build/mamalangc.exe $InputFile $GeneratedC
 if ($LASTEXITCODE -ne 0) { throw "mamalang compilation failed" }
 
-gcc -Wall -Wextra -O2 $GeneratedC -o $ExePath
+& $GCC -Wall -Wextra -O2 $GeneratedC -o $ExePath
 if ($LASTEXITCODE -ne 0) { throw "generated C build failed" }
 
 Write-Host "Build successful. Running generated program..."
+Write-Host "-------------------------------------------"
 & $ExePath
