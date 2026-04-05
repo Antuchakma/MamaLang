@@ -1,0 +1,5 @@
+// Test: type checking errors
+edike_ay_mama
+mama_eita_hoilo name = "hello"
+mama_eita_hoilo x = name + 5
+mama_chole_ja

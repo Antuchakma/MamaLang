@@ -1,0 +1,63 @@
+// MamaLang full demo: variables, conditionals, loops, functions, types
+
+edike_ay_mama
+
+// --- Variable Declaration & Assignment ---
+mama_eita_hoilo a = 20
+mama_eita_hoilo b = 10
+mama_eita_hoilo ch = 'A'
+
+// --- Conditional Statements ---
+jodi_mama (a > b) {
+    bol_mama("A boro")
+}
+nahole_mama {
+    bol_mama("B boro")
+}
+
+// --- Nested Conditionals ---
+jodi_mama (a > 15) {
+    jodi_mama (b < 20) {
+        bol_mama("Nested condition satisfied")
+    }
+}
+
+// --- While Loop ---
+mama_jotokkhon (a > 15) {
+    bol_mama(a)
+    a = a - 1
+}
+
+// --- For Loop with Double Update ---
+mama_eita_hoilo i = 0
+jotokkhon (i = 0; i < 10; i + 2, i - 1) {
+    bol_mama(i)
+}
+
+// --- Function Definition and Call ---
+mama_kaj add(x, y) {
+    ferot_de_mama x + y
+}
+
+mama_kaj factorial(n) {
+    jodi_mama (n <= 1) {
+        ferot_de_mama 1
+    }
+    ferot_de_mama n * factorial(n - 1)
+}
+
+mama_eita_hoilo sum = add(5, 3)
+bol_mama("Sum of 5 and 3:")
+bol_mama(sum)
+
+mama_eita_hoilo fact = factorial(5)
+bol_mama("Factorial of 5:")
+bol_mama(fact)
+
+// --- Char and Expression Evaluation ---
+bol_mama("Char value of ch:")
+bol_mama(ch)
+bol_mama("Expression: 3 * 4 + 2 =")
+bol_mama(3 * 4 + 2)
+
+mama_chole_ja

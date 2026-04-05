@@ -1,0 +1,28 @@
+// Test: function definitions and calls
+edike_ay_mama
+
+mama_kaj square(n) {
+    ferot_de_mama n * n
+}
+
+mama_kaj max(a, b) {
+    jodi_mama (a > b) {
+        ferot_de_mama a
+    }
+    ferot_de_mama b
+}
+
+mama_eita_hoilo result = square(7)
+bol_mama("7 squared =")
+bol_mama(result)
+
+mama_eita_hoilo bigger = max(15, 42)
+bol_mama("Max of 15 and 42 =")
+bol_mama(bigger)
+
+// Nested function calls
+mama_eita_hoilo val = max(square(3), square(2))
+bol_mama("Max of 9 and 4 =")
+bol_mama(val)
+
+mama_chole_ja

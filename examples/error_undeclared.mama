@@ -1,0 +1,5 @@
+// Test: undeclared variable error
+edike_ay_mama
+mama_eita_hoilo a = 5
+b = a + 2
+mama_chole_ja

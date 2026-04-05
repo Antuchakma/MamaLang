@@ -1,0 +1,4 @@
+// Test: missing edike_ay_mama — should show Bangla error
+mama_eita_hoilo a = 10
+bol_mama(a)
+mama_chole_ja
